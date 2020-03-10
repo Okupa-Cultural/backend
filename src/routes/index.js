@@ -14,8 +14,10 @@ router.get('/signup', (req, res, next) => {
 });
 
 let postRoutes = require('./post');
+let commentRoutes = require('./comment');
 
 router.use('/post', postRoutes);
+router.use('/comment', commentRoutes);
 
 router.post('/test', (req, res) => {
     const { username, password, email } = req.body;
@@ -24,10 +26,7 @@ router.post('/test', (req, res) => {
         const newUser = new User({ ...req.body });
         newUser.password = newUser.encryptPassword(newUser.password);
         newUser.save();
-        console.log(1);
-        console.log(req.body);
         res.json(newUser);
-        console.log(2);
     } else {
         res.send("Datos incorrectos!");
     }
