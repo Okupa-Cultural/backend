@@ -11,11 +11,12 @@ router.post('/', async (req, res) => {
 
      try {
           if(!req.files) {
-               imageName="";
+               imageName = "";
           } else {
                let bannerImage = req.files.bannerImage;
                imageName = imageName + "_" + imageSalt + ".jpg";
-               bannerImage.mv(path.join(__dirname, '../../static/commentImages/'+imageName))
+               bannerImage.mv(path.join(__dirname, '../../static/commentImages/'+imageName));
+               imageName = path.join(__dirname, '../../static/commentImages/'+imageName);
           }
      } catch {
 
@@ -25,7 +26,7 @@ router.post('/', async (req, res) => {
 
      if( user_id && post_id ) {
         //let id = idHandler.getLastId("comments");
-        const newComment = new Comment({ comment_id : 1 ,  ...req.body , image_url : path.join(__dirname, '../../static/postImages/'+imageName)});
+        const newComment = new Comment({ comment_id : 1 ,  ...req.body , image_url : imageName });
         //setLastID();
         newComment.save();
         res.json(newComment);
