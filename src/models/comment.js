@@ -8,6 +8,7 @@ const commentSchema = new Schema({
     image_url: String,
     content: String,
     replies: [],
+    isReply: Boolean,
     created_at: Date,
     updated_at: Date,
     deleted: Boolean

@@ -2,7 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const Comment = require('../models/comment');
 const path = require('path');
-//const idHandler = require('./lastId');
+const idHandler = require('./lastId');
 
 router.post('/', async (req, res) => {
 
@@ -25,9 +25,9 @@ router.post('/', async (req, res) => {
      const { user_id , post_id } = req.body;
 
      if( user_id && post_id ) {
-        //let id = idHandler.getLastId("comments");
-        const newComment = new Comment({ comment_id : 1 ,  ...req.body , image_url : imageName });
-        //setLastID();
+        let id = idHandler.getLastId("comments");
+        const newComment = new Comment({ comment_id : id ,  ...req.body , image_url : imageName });
+        setLastID();
         newComment.save();
         res.json(newComment);
      } else {
@@ -46,9 +46,9 @@ router.get("/", ( req, res ) => {
         res.json(getComment);
     }
 });
-/*
+
 function setLastID() {
     idHandler.setLastId("comments");
-}*/
+}
 
 module.exports = router;
