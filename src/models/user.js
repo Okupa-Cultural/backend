@@ -9,6 +9,7 @@ const userSchema = new Schema({
     user_type: Number,
     project_name: String,
     foundation_date: String,
+    isLogged: Boolean,
     bio: String,
     phone_number: String,
     address: String,

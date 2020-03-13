@@ -32,12 +32,32 @@ router.post('/test', (req, res) => {
     }
 });
 
+router.post('/test-login', async ( req, res) => {
+    const { username , password } = req.body;
+    const userEngine = new User;
+    let userFound;
+
+    const encryptedPassword = userEngine.encryptPassword(password);
+    userEngine.find({ username: username, password: encryptedPassword } ,'username', function (err, user) {
+        if(err) return handleError(err);
+
+        userFound = user;
+    });
+
+    if(userFound) {
+        res.json("found!");
+    } else {
+        res.json("not found!");
+    }
+});
+
+/*
 router.post('/signup', passport.authenticate('local-signup', {
     successRedirect: '/profile',
     failureRedirect: '/signup',
     passReqToCallback: true
 }));
-
+*/
 router.get('/login', (req, res, next) => {
     res.send('login');
 });

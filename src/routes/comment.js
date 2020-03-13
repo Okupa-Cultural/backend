@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
         newComment.save();
         res.json(newComment);
      } else {
-          let errMessage = { status:"failed", message:"user_id and post_id are required" }
+          let errMessage = { status:"failed", message:"user_id and post_id are required" };
           errMessage = JSON.stringify(errMessage);
 
           res.json(errMessage);

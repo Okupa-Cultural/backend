@@ -18,19 +18,19 @@ app.set('port', process.env.PORT || 4000);
 
 //middlewares
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({ extended : false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(session({
-    secret: 'mysecretsession',
-    resave:false,
-    saveUninitialized: false
+    secret : 'mysecretsession',
+    resave : false,
+    saveUninitialized : false
 }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(fileUpload({
-    createParentPath: true,
+    createParentPath : true,
 }));
 
 app.use((req, res, next) => {
