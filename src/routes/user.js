@@ -23,10 +23,12 @@ router.post('/login', async ( req, res ) => {
     await User.findOne({ username: username } , function (err, user) {
         if(err) return handleError(err);
 
-        theUser = user;
-        let token = theUser.generateToken();
-        theUser.token = token;
-        theUser.save();
+        if(user.validatePassword(password)) {
+            theUser = user;
+            let token = theUser.generateToken();
+            theUser.token = token;
+            theUser.save();
+        }
     });
 
     if(theUser) {
