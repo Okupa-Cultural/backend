@@ -13,6 +13,7 @@ const userSchema = new Schema({
     bio: String,
     phone_number: String,
     address: String,
+    token : String,
     created_at: String
 });
 
@@ -22,6 +23,15 @@ userSchema.methods.encryptPassword = (password) => {
 
 userSchema.methods.validatePassword = function (password) {
     return bcrypt.compareSync(password, this.password);
+};
+
+userSchema.methods.generateToken = function () {
+    let token = Math.floor( Math.random() * 1000000 );
+    return bcrypt.hashSync( token , bcrypt.genSaltSync(10) );
+};
+
+userSchema.methods.deleteToken = function () {
+    this.token = "";
 };
 
 module.exports = mongoose.model( 'user' , userSchema );
