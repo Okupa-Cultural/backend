@@ -25,9 +25,8 @@ router.post('/', async (req, res) => {
      const { user_id , post_id } = req.body;
 
      if( user_id && post_id ) {
-        let id = idHandler.getLastId("comments");
+        let id = 1;
         const newComment = new Comment({ comment_id : id ,  ...req.body , image_url : imageName });
-        setLastID();
         newComment.save();
         res.json(newComment);
      } else {
