@@ -3,13 +3,27 @@ const { Schema } = mongoose;
 
 const commentSchema = new Schema({
     comment_id: Number,
-    user_id: String,
-    post_id: String,
+    user_id: {
+        type: String,
+        required: true
+    },
+    post_id: {
+        type: String,
+        required: true
+    },
     image_url: String,
     content: String,
-    replies: [],
+    replies: [{
+        comment_id: String,
+        user_id: String,
+        content: String,
+        image_url: String
+    }],
     isReply: Boolean,
-    created_at: Date,
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
     updated_at: Date,
     deleted: Boolean
 });

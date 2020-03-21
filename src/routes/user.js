@@ -1,31 +1,23 @@
 const { Router } = require('express');
 const router = Router();
 const User = require('../models/user');
+const { userAlreadyExists , createNewUser } = require('../lib/search');
 
 
 router.post('/signup', async (req, res, next) => {
-    const { username, password, email } = req.body;
-    let alreadyExists = false;
 
-    await User.findOne({ username }, function (err, user) {
-        if(err) return handleError(err);
+    const alreadyExists = await userAlreadyExists(req.body.username);
 
-        if(user) {
-            alreadyExists = true;
-            res.send("username already in use");
-            next();
-        }
-    });
+    if(alreadyExists) {
+        res.send("username already in use");
+        next();
+    }
 
     if(!alreadyExists) {
-        if(username && password && email) {
-            const newUser = new User({ ...req.body });
-            newUser.password = newUser.encryptPassword(newUser.password);
-            newUser.save();
-            res.json(newUser);
-        } else {
-            res.send("Datos incorrectos!");
-        }
+        let newUser = createNewUser(req.body);
+        res.json(newUser);
+    } else {
+        res.send("Datos incorrectos!");
     }
 
 });
@@ -60,7 +52,7 @@ router.post('/logout', async ( req, res ) => {
     const { username , token } = req.body;
 
     if(username && token) {
-        await User.findOne({ username : username , token : token }, 'token', function (err, user) {
+        await User.findOne({ username , token }, 'token', function (err, user) {
             if(err) return handleError(err);
 
             if(user) {

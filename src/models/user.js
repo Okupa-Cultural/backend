@@ -3,18 +3,35 @@ const bcrypt = require('bcrypt-nodejs');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    username: String,
-    password: String,
-    email: String,
+    username: { 
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: { 
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
     user_type: Number,
     project_name: String,
     foundation_date: String,
-    isLogged: Boolean,
+    isLogged: {
+        type: Boolean,
+        default: false,
+    },
     bio: String,
     phone_number: String,
     address: String,
     token : String,
-    created_at: String
+    created_at: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 userSchema.methods.encryptPassword = (password) => {

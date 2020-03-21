@@ -1,5 +1,4 @@
 const axios = require('axios');
-const User = require('../../models/user');
 
 const random = Math.floor(Math.random() * 10000);
 const username = `test_username_${random}`;
@@ -33,4 +32,11 @@ describe('should Login, Signup and Logout a new user', () => {
                 token = res.data.token;
             });
     });
+    /*
+    test('should return true while login with usuarioprueba' , async () => {
+        let user = await searchUserByUsername('usuarioprueba').then(usuario => user = usuario);
+        console.log(user);
+        expect(user).toBeTruthy();
+    });
+    */
 });
