@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const User = require('../models/user');
-const { userAlreadyExists , createNewUser } = require('../lib/search');
+const { userAlreadyExists , createNewUser , generateUserLoginToken, passwordIsValid , searchUserByUsername} = require('../lib/search');
 
 
 router.post('/signup', async (req, res, next) => {
@@ -9,50 +9,32 @@ router.post('/signup', async (req, res, next) => {
     const alreadyExists = await userAlreadyExists(req.body.username);
 
     if(alreadyExists) {
-        res.send("username already in use");
+        res.json("username already in use");
         next();
-    }
-
-    if(!alreadyExists) {
+    } else {
         let newUser = createNewUser(req.body);
         res.json(newUser);
-    } else {
-        res.send("Datos incorrectos!");
     }
 
 });
 
 router.post('/login', async ( req, res ) => {
+
     const { username , password } = req.body;
-    let theUser;
 
-    if(username && password) {
-        await User.findOne({ username: username } , function (err, user) {
-            if(err) return handleError(err);
-
-            if(user) {
-                if(user.validatePassword(password)) {
-                    theUser = user;
-                    let token = theUser.generateToken();
-                    theUser.token = token;
-                    theUser.save();
-                }
+    await userAlreadyExists(username)
+        .then(user => {
+            if(passwordIsValid(user , password)) {
+                res.json(generateUserLoginToken(user));
             }
-        });
-    }
-
-    if(theUser) {
-        res.json(theUser);
-    } else {
-        res.json("not found!");
-    }
+        }).catch(err => console.log(err));
 });
 
-router.post('/logout', async ( req, res ) => {
+router.post('/logout', ( req, res ) => {
     const { username , token } = req.body;
 
     if(username && token) {
-        await User.findOne({ username , token }, 'token', function (err, user) {
+        User.findOne({ username , token }, 'token', function (err, user) {
             if(err) return handleError(err);
 
             if(user) {

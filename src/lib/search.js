@@ -1,27 +1,32 @@
 const User = require('../models/user');
 
-async function searchUserByUsername(username) {
-    try {
-        const user = await User.find({ username });
-        if(user) {
-            return user;
-        } else {
-            return false;
-        }
-    } catch(errors) {
-        console.log(errors);
-        return false;
-    }
+const searchUserByUsername = async username => {
+  await User.findOne({ username })
+    .then(user => Promise.resolve(user))
+    .catch(err => Promise.reject(err));
 }
 
-async function userAlreadyExists(username) {
+const userAlreadyExists = async username => {
 
-    let alreadyExists = false;
+    searchUserByUsername(username)
+        .then( user => Promise.resolve(user))
+        .catch(err => Promise.reject(err));
+        
+}
 
-    await searchUserByUsername(username)
-        .then( res => alreadyExists = res);
+const generateUserLoginToken = user => {
+    user.token = user.generateToken();
+    user.save();
 
-    return alreadyExists;
+    return user;
+}
+
+const passwordIsValid = (user = false, password) => {
+    if(user && user.validatePassword(password)) {
+        return true;
+    }
+
+    return false;
 }
 
 const createNewUser = data => {
@@ -40,5 +45,7 @@ const createNewUser = data => {
 module.exports = {
     searchUserByUsername,
     userAlreadyExists,
-    createNewUser
+    createNewUser,
+    generateUserLoginToken,
+    passwordIsValid
 };
