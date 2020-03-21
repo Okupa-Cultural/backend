@@ -21,7 +21,7 @@ describe('should Login, Signup and Logout a new user', () => {
         await axios.post('/api/login', { username , password })
             .then(res => {
                 expect(res.status).toEqual(200);
-                expect(res.data.token).toBeTruthy();
+                expect(typeof res.data.token).toBe('string');
                 token = res.data.token;
             }).catch(err => console.log(err));
     });
@@ -29,20 +29,9 @@ describe('should Login, Signup and Logout a new user', () => {
     test('should logout the new user', async () => {
         await axios.post('/api/logout', { username , token })
             .then(res => {
-                console.log(res.data);
                 expect(res.status).toEqual(200);
                 expect(res.data.token).toBeFalsy();
                 token = res.data.token;
             }).catch(err => console.log(err));
     });
-    
-    test('should return true while login with usuarioprueba' , async () => {
-        userAlreadyExists('usuarioprueba')
-            .then(user => {
-                console.log(user);
-                console.log("hi");
-                expect(user).toBeTruthy();
-            }).catch(err => console.log(err));
-    });
-    
 });

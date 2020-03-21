@@ -1,7 +1,17 @@
 const { Router } = require('express');
 const router = Router();
 const User = require('../models/user');
-const { userAlreadyExists , createNewUser , generateUserLoginToken, passwordIsValid , searchUserByUsername} = require('../lib/search');
+const { 
+
+    userAlreadyExists , 
+    createNewUser , 
+    generateUserLoginToken , 
+    deleteUserLoginToken ,
+    passwordIsValid , 
+    searchUserByUsername ,
+    searchUserByUsernameAndToken ,
+
+} = require('../lib/search');
 
 
 router.post('/signup', async (req, res, next) => {
@@ -22,29 +32,26 @@ router.post('/login', async ( req, res ) => {
 
     const { username , password } = req.body;
 
-    await userAlreadyExists(username)
-        .then(user => {
-            if(passwordIsValid(user , password)) {
-                res.json(generateUserLoginToken(user));
-            }
-        }).catch(err => console.log(err));
+    const user = await searchUserByUsername(username);
+    const validatePassword = passwordIsValid(user , password);
+
+    if(validatePassword) {
+         res.json(generateUserLoginToken(user));
+    } else {
+        res.json(user);
+    }
+    
 });
 
-router.post('/logout', ( req, res ) => {
+router.post('/logout', async ( req, res ) => {
     const { username , token } = req.body;
 
-    if(username && token) {
-        User.findOne({ username , token }, 'token', function (err, user) {
-            if(err) return handleError(err);
+    const user = await searchUserByUsernameAndToken( username , token );
 
-            if(user) {
-                user.deleteToken();
-                user.save();
-                res.json(user);
-            } else {
-                res.send("invalid user or token provided");
-            }
-        });
+    if(user) {
+        res.json(deleteUserLoginToken(user));
+    } else {
+        res.json(user);
     }
 });
 
