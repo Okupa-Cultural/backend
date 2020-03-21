@@ -17,7 +17,10 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    user_type: Number,
+    user_type: {
+        type: Number,
+        default: 1
+    },
     project_name: String,
     foundation_date: String,
     isLogged: {
