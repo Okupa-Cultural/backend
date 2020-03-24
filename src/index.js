@@ -6,7 +6,7 @@ require('./database');
 require('./passport/local-auth');
 
 //settings
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 
 //middlewares
 app.use(require('./middlewares'));
