@@ -22,7 +22,7 @@
     "express-graphql": "^0.9.0",
     "express-session": "^1.17.0",
     "graphql": "^14.6.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.9.2",
     "morgan": "^1.9.1",
     "nodemon": "^2.0.2",
